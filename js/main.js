@@ -6,6 +6,7 @@ const NOTICES_NUMBER = 8;
 const MAX_RANDOM = 10;
 const MAX_ROOMS_NUMBER = 6;
 const MAX_GUESTS_NUMBER = 10;
+const MAX_PHOTOS_NUMBER = 3;
 const PRICE_FACTOR = 1000;
 
 const CHECK_IN = 12;
@@ -13,7 +14,7 @@ const CHECK_OUT = 14;
 const LOCATION_Y_MIN = 130;
 const LOCATION_Y_MAX = 630;
 const LOCATION_X_MIN = 0;
-// const LOCATION_X_MAX = 1150;
+const PHOTOS_ADDRESS = `http://o0.github.io/assets/images/tokyo/hotel1.jpg`;
 
 const TYPE_LIST = [
   `palace`,
@@ -21,6 +22,13 @@ const TYPE_LIST = [
   `house`,
   `bungalow`
 ];
+
+const OFFER_TYPE_MAP = {
+  palace: `Дворец`,
+  flat: `Квартира`,
+  house: `Дом`,
+  bungalow: `Бунгало`
+};
 
 const FEATURES_LIST = [
   `wifi`,
@@ -31,10 +39,10 @@ const FEATURES_LIST = [
   `conditioner`
 ];
 
-const PHOTOS_ADDRESS = `http://o0.github.io/assets/images/tokyo/hotel1.jpg, `;
-
 const map = document.querySelector(`.map`);
-const template = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
+const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
+const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
+const cardInsertPosition = map.querySelector(`.map__filters-container`);
 const mapPins = map.querySelector(`.map__pins`);
 const locationXMax = mapPins.clientWidth;
 
@@ -48,7 +56,7 @@ const getRandomArrayFromList = (list) => list.filter((item) => item && Math.rand
 const getRandomPhotosArray = () => {
   const arr = [];
 
-  for (let i = 1; i <= getRandomInRange(MAX_RANDOM); i++) {
+  for (let i = 1; i <= getRandomInRange(MAX_PHOTOS_NUMBER); i++) {
     arr.push(PHOTOS_ADDRESS.replace(`hotel1`, `hotel${i}`));
   }
 
@@ -89,7 +97,7 @@ const getNoticesList = () => {
 };
 
 const generatePin = (notice) => {
-  const pin = template.cloneNode(true);
+  const pin = pinTemplate.cloneNode(true);
   pin.querySelector(`img`).src = notice.author.avatar;
   pin.querySelector(`img`).alt = notice.offer.title;
   pin.style.left = `${notice.location.x}px`;
@@ -98,8 +106,7 @@ const generatePin = (notice) => {
   return pin;
 };
 
-const getPinBlock = () => {
-  const pins = getNoticesList();
+const getPinBlock = (pins) => {
   const fragment = document.createDocumentFragment();
 
   for (let i = 0; i < NOTICES_NUMBER; i++) {
@@ -117,10 +124,57 @@ const setPinsOffset = () => {
     element.style.left = `${parseInt(element.style.left, 10) - parseInt(pinStyle.width, 10) / 2}px`;
     element.style.top = `${parseInt(element.style.top, 10) - parseInt(pinStyle.height, 10)}px`;
   });
+};
 
+const getNoticeCard = (notice) => {
+  const {
+    author: {
+      avatar
+    },
+    offer: {
+      title, address, price, type, rooms, guests, checkin, checkout, features, description, photos
+    }
+  } = notice;
+
+  const guestString = guests % 10 === 1 && guests % 10 !== 11 ? `гостя` : `гостей`;
+
+  let roomString = `комнат`;
+  switch (rooms % 10) {
+    case 1:
+      if (rooms !== 11) {
+        roomString = `комната`;
+      }
+      break;
+
+    case 2:
+    case 3:
+    case 4:
+      if (rooms !== 12 && rooms !== 13 && rooms !== 14) {
+        roomString = `комнаты`;
+      }
+      break;
+  }
+
+  const card = cardTemplate.cloneNode(true);
+
+  card.querySelector(`.popup__title`).textContent = title;
+  card.querySelector(`.popup__text--address`).textContent = address;
+  card.querySelector(`.popup__text--price`).textContent = `${price}₽/ночь`;
+  card.querySelector(`.popup__type`).textContent = OFFER_TYPE_MAP[type];
+  card.querySelector(`.popup__text--capacity`).textContent = `${rooms} ${roomString} для ${guests} ${guestString}`;
+  card.querySelector(`.popup__text--time`).textContent = `Заезд\u00a0после ${checkin}, выезд\u00a0до ${checkout}`;
+  card.querySelector(`.popup__features`).innerHTML = features.reduce((string, item) => string + `<li class="popup__feature popup__feature--${item}"></li>`, ``);
+  card.querySelector(`.popup__description`).textContent = description;
+  card.querySelector(`.popup__photos`).innerHTML = photos.reduce((string, item) =>
+    string + `<img src="${item}" class="popup__photo" width="45" height="40" alt="Фотография жилья">`, ``);
+  card.querySelector(`.popup__avatar`).setAttribute(`src`, avatar);
+
+  return card;
 };
 
 
 map.classList.remove(`map--faded`);
-mapPins.appendChild(getPinBlock());
+const noticesList = getNoticesList();
+mapPins.appendChild(getPinBlock(noticesList));
 setPinsOffset();
+map.insertBefore(getNoticeCard(noticesList[0]), cardInsertPosition);
