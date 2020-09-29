@@ -2,7 +2,6 @@
 
 const NOTICES_NUMBER = 8;
 
-// случайные константы, придумала сама
 const MAX_RANDOM = 10;
 const MAX_ROOMS_NUMBER = 6;
 const MAX_GUESTS_NUMBER = 10;
@@ -15,6 +14,8 @@ const LOCATION_Y_MIN = 130;
 const LOCATION_Y_MAX = 630;
 const LOCATION_X_MIN = 0;
 const PHOTOS_ADDRESS = `http://o0.github.io/assets/images/tokyo/hotel1.jpg`;
+const ROOM_FORMS = [`комната`, `комнаты`, `комнат`];
+const GUEST_FORMS = [`гостя`, `гостей`, `гостей`];
 
 const TYPE_LIST = [
   `palace`,
@@ -145,7 +146,17 @@ const getNoticeCard = (notice) => {
       avatar
     },
     offer: {
-      title, address, price, type, rooms, guests, checkin, checkout, features, description, photos
+      title,
+      address,
+      price,
+      type,
+      rooms,
+      guests,
+      checkin,
+      checkout,
+      features,
+      description,
+      photos
     }
   } = notice;
 
@@ -156,64 +167,30 @@ const getNoticeCard = (notice) => {
     return card;
   }
 
-  if (!title) {
-    card.querySelector(`.popup__title`).remove();
-  } else {
-    card.querySelector(`.popup__title`).textContent = title;
-  }
+  card.querySelector(`.popup__title`).textContent = title || ``;
+  card.querySelector(`.popup__text--address`).textContent = address || ``;
+  card.querySelector(`.popup__text--price`).textContent = price ? `${price}₽/ночь` : ``;
+  card.querySelector(`.popup__type`).textContent = type ? OFFER_TYPE_MAP[type] : ``;
+  card.querySelector(`.popup__text--capacity`).textContent = (rooms ? `${rooms} ${getWordForm(rooms, ROOM_FORMS)}` : ``) +
+    (guests ? ` для ${guests} ${getWordForm(guests, GUEST_FORMS)}` : ``);
+  card.querySelector(`.popup__text--time`).textContent = (checkin ?
+    `Заезд\u00a0после ${checkin}` : ``) + (checkin && checkout ? `, ` : ``) + (checkout ? `выезд\u00a0до ${checkout}` : ``);
+  card.querySelector(`.popup__features`).innerHTML = features && features.length ?
+    features.reduce((string, item) => string + `<li class="popup__feature popup__feature--${item}"></li>`, ``) : ``;
+  card.querySelector(`.popup__description`).textContent = description || ``;
+  card.querySelector(`.popup__photos`).innerHTML = photos && photos.length ?
+    photos.reduce((string, item) => string + `<img src="${item}" class="popup__photo" width="45" height="40" alt="Фотография жилья">`, ``) : ``;
 
-  if (!address) {
-    card.querySelector(`.popup__text--address`).remove();
-  } else {
-    card.querySelector(`.popup__text--address`).textContent = address;
-  }
+  const avatarBlock = card.querySelector(`.popup__avatar`);
+  avatarBlock.src = avatar;
+  avatarBlock.alt = title;
 
-  if (!price) {
-    card.querySelector(`.popup__text--price`).remove();
-  } else {
-    card.querySelector(`.popup__text--price`).textContent = `${price}₽/ночь`;
-  }
-
-  if (!type) {
-    card.querySelector(`.popup__type`).remove();
-  } else {
-    card.querySelector(`.popup__type`).textContent = OFFER_TYPE_MAP[type];
-  }
-
-  if (!rooms && !guests) {
-    card.querySelector(`.popup__text--capacity`).remove();
-  } else {
-    card.querySelector(`.popup__text--capacity`).textContent = (rooms ? `${rooms} ${getWordForm(rooms, [`комната`, `комнаты`, `комнат`])}` : ``) +
-      (guests ? `для ${guests} ${getWordForm(guests, [`гостя`, `гостей`, `гостей`])}` : ``);
-  }
-
-  if (!checkin && !checkout) {
-    card.querySelector(`.popup__text--time`).remove();
-  } else {
-    card.querySelector(`.popup__text--time`).textContent = (checkin ? `Заезд\u00a0после ${checkin}` : ``) +
-      ((checkin && checkout) ? `, ` : ``) + (checkout ? `выезд\u00a0до ${checkout}` : ``);
-  }
-
-  if (!features || features.length === 0) {
-    card.querySelector(`.popup__features`).remove();
-  } else {
-    card.querySelector(`.popup__features`).innerHTML = features.reduce((string, item) => string + `<li class="popup__feature popup__feature--${item}"></li>`, ``);
-  }
-
-  if (!description) {
-    card.querySelector(`.popup__description`).remove();
-  } else {
-    card.querySelector(`.popup__description`).textContent = description;
-  }
-
-  if (!photos || photos.length === 0) {
-    card.querySelector(`.popup__photos`).remove();
-  } else {
-    card.querySelector(`.popup__photos`).innerHTML = photos.reduce((string, item) =>
-      string + `<img src = "${item}" class="popup__photo" width = "45" height = "40" alt = "Фотография жилья">`, ``);
-  }
-
-  card.querySelector(`.popup__avatar`).setAttribute(`src`, avatar);
+  const nodesToCheckEmptiness = Array.from(document.querySelector(`#card`).content.querySelectorAll(`.map__card > *:not(button):not(img)`));
+  nodesToCheckEmptiness.forEach((node) => {
+    if (!node.innerHTML) {
+      node.remove();
+    }
+  });
 
   return card;
 };
