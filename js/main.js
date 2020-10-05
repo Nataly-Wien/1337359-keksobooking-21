@@ -63,6 +63,9 @@ const roomsField = document.querySelector(`select[id="room_number"]`);
 const capacityField = document.querySelector(`select[id="capacity"]`);
 
 let isPageActive = false;
+let isCardOpen = false;
+let noticesList = [];
+let currentCard = null;
 
 
 const getRandomInRange = (max, min = 1) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -130,11 +133,13 @@ const generatePin = (notice) => {
   return pin;
 };
 
-const getPinBlock = (pins) => {
+const getPinBlock = (notices) => {
   const fragment = document.createDocumentFragment();
 
   for (let i = 0; i < NOTICES_NUMBER; i++) {
-    fragment.appendChild(generatePin(pins[i]));
+    let pin = generatePin(notices[i]);
+    pin.setAttribute(`data-index`, i);
+    fragment.appendChild(pin);
   }
 
   return fragment;
@@ -226,8 +231,10 @@ const toggleElementsDisabling = (list, state) => {
   });
 };
 
+const isClickOrEnter = (evt) => evt.button === 0 || evt.key === `Enter`;
+
 const activatePage = (evt) => {
-  if (isPageActive || !(evt.button === 0 || evt.key === `Enter`)) {
+  if (isPageActive || !isClickOrEnter(evt)) {
     return;
   }
 
@@ -244,7 +251,7 @@ const activatePage = (evt) => {
   addressField.value = getTipCoords(mainPin);
   capacityField.options[2].selected = true;
 
-  const noticesList = getNoticesList();
+  noticesList = getNoticesList();
   mapPins.appendChild(getPinBlock(noticesList));
   setPinsOffset();
 };
@@ -279,13 +286,51 @@ const onCapacityFieldCheck = (evt) => {
   evt.target.reportValidity();
 };
 
+const showCard = (index) => {
+  if (isCardOpen) {
+    currentCard.remove();
+  }
+  currentCard = getNoticeCard(noticesList[index]);
+  map.insertBefore(currentCard, cardInsertPosition);
+  document.addEventListener(`keydown`, onDocumentKeydown);
+  const closeButton = currentCard.querySelector(`.popup__close`);
+  closeButton.addEventListener(`click`, onCloseButtonClick);
+  closeButton.addEventListener(`keydown`, onCloseButtonClick);
+  isCardOpen = true;
+};
 
-window.addEventListener(`load`, () => {
-  mainPin.addEventListener(`mousedown`, activatePage);
-  mainPin.addEventListener(`keydown`, activatePage);
-});
+const closeCard = () => {
+  document.removeEventListener(`keydown`, onDocumentKeydown);
+  isCardOpen = false;
+  currentCard.remove();
+};
+
+const onMapClickOrKeydown = (evt) => {
+  const index = evt.target.dataset.index ? evt.target.dataset.index : evt.target.closest(`button`).dataset.index;
+
+  if (index && isClickOrEnter(evt)) {
+    showCard(index);
+  }
+};
+
+const onDocumentKeydown = (evt) => {
+  if (evt.key === `Escape` && isCardOpen) {
+    evt.preventDefault();
+    closeCard(evt);
+  }
+};
+
+const onCloseButtonClick = (evt) => {
+  if (isClickOrEnter(evt)) {
+    closeCard(evt);
+  }
+};
+
+
+mainPin.addEventListener(`mousedown`, activatePage);
+mainPin.addEventListener(`keydown`, activatePage);
 capacityField.addEventListener(`change`, onCapacityFieldCheck);
 roomsField.addEventListener(`change`, onCapacityFieldCheck);
+mapPins.addEventListener(`click`, onMapClickOrKeydown);
+mapPins.addEventListener(`keydown`, onMapClickOrKeydown);
 deactivatePage();
-
-// map.insertBefore(getNoticeCard(noticesList[0]), cardInsertPosition);
