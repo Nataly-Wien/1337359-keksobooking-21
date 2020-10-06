@@ -296,11 +296,11 @@ const onCapacityFieldCheck = (evt) => {
   evt.target.reportValidity();
 };
 
-const showCard = (index) => {
+const showCard = (id) => {
   if (isCardOpen) {
     currentCard.remove();
   }
-  currentCard = getNoticeCard(noticesList[index]);
+  currentCard = getNoticeCard(noticesList.find(((item) => item.id === id)));
   map.insertBefore(currentCard, cardInsertPosition);
   document.addEventListener(`keydown`, onDocumentKeydown);
   const closeButton = currentCard.querySelector(`.popup__close`);
@@ -317,10 +317,10 @@ const closeCard = () => {
 
 const onMapClickOrKeydown = (evt) => {
   const evtIdx = evt.target.dataset.id;
-  const index = evtIdx ? evtIdx : evt.target.closest(`button`).dataset.id;
+  const id = evtIdx ? evtIdx : evt.target.closest(`button`).dataset.id;
 
-  if (index && isClickOrEnter(evt)) {
-    showCard(index);
+  if (id && isClickOrEnter(evt)) {
+    showCard(id);
   }
 };
 
