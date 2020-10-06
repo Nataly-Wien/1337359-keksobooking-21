@@ -138,7 +138,7 @@ const getPinBlock = (notices) => {
 
   for (let i = 0; i < NOTICES_NUMBER; i++) {
     let pin = generatePin(notices[i]);
-    pin.setAttribute(`data-index`, i);
+    pin.setAttribute(`data-id`, notices[i].id);
     fragment.appendChild(pin);
   }
 
@@ -217,15 +217,18 @@ const getNoticeCard = (notice) => {
   return card;
 };
 
-const getTipCoords = (element) => {
+const getPinCoords = (element) => {
   const elemStyle = window.getComputedStyle(element);
+  const currentY = isPageActive
+    ? parseInt(elemStyle.height, 10)
+    : Math.round(parseInt(elemStyle.height, 10) / 2);
   const x = parseInt(element.style.left, 10) + Math.round(parseInt(elemStyle.width, 10) / 2);
-  const y = parseInt(element.style.top, 10) + (isPageActive ? parseInt(elemStyle.height, 10) : Math.round(parseInt(elemStyle.height, 10) / 2));
+  const y = parseInt(element.style.top, 10) + currentY;
 
   return `${x}, ${y}`;
 };
 
-const toggleElementsDisabling = (list, state) => {
+const toggleElementsStyle = (list, state) => {
   list.forEach((elem) => {
     elem.disabled = state;
   });
@@ -242,16 +245,21 @@ const activatePage = (evt) => {
   if (map.classList.contains(`map--faded`)) {
     map.classList.remove(`map--faded`);
   }
+
   if (noticeForm.classList.contains(`ad-form--disabled`)) {
     noticeForm.classList.remove(`ad-form--disabled`);
   }
-  toggleElementsDisabling(noticeFormElements, false);
-  toggleElementsDisabling(filterFormElements, false);
 
-  addressField.value = getTipCoords(mainPin);
+  toggleElementsStyle(noticeFormElements, false);
+  toggleElementsStyle(filterFormElements, false);
+
+  addressField.value = getPinCoords(mainPin);
   capacityField.options[2].selected = true;
 
   noticesList = getNoticesList();
+  noticesList.map((item, index) => {
+    item.id = index;
+  });
   mapPins.appendChild(getPinBlock(noticesList));
   setPinsOffset();
 };
@@ -261,13 +269,15 @@ const deactivatePage = () => {
   if (!map.classList.contains(`map--faded`)) {
     map.classList.add(`map--faded`);
   }
+
   if (!noticeForm.classList.contains(`ad-form--disabled`)) {
     noticeForm.classList.add(`ad-form--disabled`);
   }
-  toggleElementsDisabling(noticeFormElements, true);
-  toggleElementsDisabling(filterFormElements, true);
 
-  addressField.value = getTipCoords(mainPin);
+  toggleElementsStyle(noticeFormElements, true);
+  toggleElementsStyle(filterFormElements, true);
+
+  addressField.value = getPinCoords(mainPin);
 };
 
 const onCapacityFieldCheck = (evt) => {
@@ -306,7 +316,8 @@ const closeCard = () => {
 };
 
 const onMapClickOrKeydown = (evt) => {
-  const index = evt.target.dataset.index ? evt.target.dataset.index : evt.target.closest(`button`).dataset.index;
+  const evtIdx = evt.target.dataset.id;
+  const index = evtIdx ? evtIdx : evt.target.closest(`button`).dataset.id;
 
   if (index && isClickOrEnter(evt)) {
     showCard(index);
@@ -316,13 +327,13 @@ const onMapClickOrKeydown = (evt) => {
 const onDocumentKeydown = (evt) => {
   if (evt.key === `Escape` && isCardOpen) {
     evt.preventDefault();
-    closeCard(evt);
+    closeCard();
   }
 };
 
 const onCloseButtonClick = (evt) => {
   if (isClickOrEnter(evt)) {
-    closeCard(evt);
+    closeCard();
   }
 };
 
