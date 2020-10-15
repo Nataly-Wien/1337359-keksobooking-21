@@ -35,8 +35,8 @@
       }
     } = notice;
 
-    const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
-    const card = cardTemplate.cloneNode(true);
+    const cardTemplate = document.querySelector(`#card`).content;
+    const card = cardTemplate.querySelector(`.map__card`).cloneNode(true);
 
     if (Object.keys(notice.offer).length === 0) {
       card.hidden = true;
@@ -54,14 +54,14 @@
     card.querySelector(`.popup__features`).innerHTML = features && features.length ?
       features.reduce((string, item) => string + `<li class="popup__feature popup__feature--${item}"></li>`, ``) : ``;
     card.querySelector(`.popup__description`).textContent = description || ``;
-    card.querySelector(`.popup__photos`).innerHTML = photos && photos.length ?
-      photos.reduce((string, item) => string + `<img src="${item}" class="popup__photo" width="45" height="40" alt="Фотография жилья">`, ``) : ``;
+    card.querySelector(`.popup__photos`).innerHTML = photos && photos.length ? photos.reduce((string, item) =>
+      string + `<img src="${item}" class="popup__photo" width="45" height="40" alt="Фотография жилья">`, ``) : ``;
 
     const avatarBlock = card.querySelector(`.popup__avatar`);
     avatarBlock.src = avatar;
     avatarBlock.alt = title;
 
-    const nodesToCheckEmptiness = document.querySelector(`#card`).content.querySelectorAll(`.map__card > *:not(button):not(img)`);
+    const nodesToCheckEmptiness = cardTemplate.querySelectorAll(`.map__card > *:not(button):not(img)`);
     nodesToCheckEmptiness.forEach((node) => {
       if (!node.innerHTML) {
         node.remove();
@@ -71,18 +71,18 @@
     return card;
   };
 
-  const showCard = (id) => {
+  const showCard = (notice) => {
     if (isCardOpen) {
       currentCard.remove();
     }
 
-    currentCard = getNoticeCard(window.options.noticesList.find((item) => item.id === +id));
+    currentCard = getNoticeCard(notice);
     window.options.map.insertBefore(currentCard, cardInsertPosition);
+    isCardOpen = true;
+
     document.addEventListener(`keydown`, onDocumentKeydown);
     const closeButton = currentCard.querySelector(`.popup__close`);
     closeButton.addEventListener(`click`, onCloseButtonClick);
-    closeButton.addEventListener(`keydown`, onCloseButtonClick);
-    isCardOpen = true;
   };
 
   const closeCard = () => {
@@ -98,23 +98,27 @@
     }
   };
 
-  const onCloseButtonClick = (evt) => {
-    if (evt.button === 0 || evt.key === `Enter`) {
-      closeCard();
-    }
-  };
+  const onCloseButtonClick = () => closeCard();
 
   const onMapClickOrKeydown = (evt) => {
-    const evtIdx = evt.target.dataset.id;
-    const id = evtIdx ? evtIdx : evt.target.closest(`button`).dataset.id;
+    const pin = evt.target.closest(`button`);
+    const activePin = document.querySelector(`.map__pin--active`);
 
-    if (id && (evt.button === 0 || evt.key === `Enter`)) {
-      showCard(id);
+    if (!pin || (activePin === pin && isCardOpen)) {
+      return;
     }
+
+    if (activePin) {
+      activePin.classList.remove(`map__pin--active`);
+    }
+    pin.classList.add(`map__pin--active`);
+
+    const notice = window.options.noticesList.find((item) => item.id === +pin.dataset.id);
+    showCard(notice);
+
   };
 
   window.card = {
-    // getNoticeCard,
     onMapClickOrKeydown,
   };
 })();

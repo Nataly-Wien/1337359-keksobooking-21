@@ -1,6 +1,8 @@
 'use strict';
 
 (() => {
+  const NOTICES_NUMBER = 8;
+
   const MAX_RANDOM = 10;
   const MAX_ROOMS_NUMBER = 3;
   const MAX_GUESTS_NUMBER = 3;
@@ -32,10 +34,10 @@
 
   const locationXMax = window.options.mapPins.clientWidth;
 
-  const getNoticesList = (number) => {
+  const getNoticesList = () => {
     const notices = [];
 
-    for (let i = 1; i <= number; i++) {
+    for (let i = 1; i <= NOTICES_NUMBER; i++) {
       const locX = window.utils.getRandomInRange(locationXMax, LOCATION_X_MIN);
       const locY = window.utils.getRandomInRange(LOCATION_Y_MAX, LOCATION_Y_MIN);
       notices.push({

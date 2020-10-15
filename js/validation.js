@@ -19,7 +19,15 @@
     `цена не может быть меньше, чем`,
   ];
 
+  const priceMap = {
+    bungalow: 0,
+    flat: 1000,
+    house: 5000,
+    palace: 10000,
+  };
+
   const roomsField = document.querySelector(`select[id="room_number"]`);
+  const capacityField = document.querySelector(`select[id="capacity"]`);
   const titleField = document.querySelector(`input[id="title"]`);
   const priceField = document.querySelector(`input[id="price"]`);
   const typeField = document.querySelector(`select[id="type"]`);
@@ -30,10 +38,10 @@
     const GUEST_MESSAGE_FORMS = [`гостя`, `гостей`, `гостей`];
 
     const roomsNumber = Number(roomsField.value);
-    const guestsNumber = Number(window.options.capacityField.value);
+    const guestsNumber = Number(capacityField.value);
 
     roomsField.setCustomValidity(``);
-    window.options.capacityField.setCustomValidity(``);
+    capacityField.setCustomValidity(``);
     if (guestsNumber > roomsNumber && roomsNumber !== SPECIAL_ROOMS_NUMBER) {
       evt.target.setCustomValidity(`${VALIDATION_MESSAGES[0]} ${roomsNumber} ${window.utils.getWordForm(roomsNumber, GUEST_MESSAGE_FORMS)}`);
     } else if (roomsNumber === SPECIAL_ROOMS_NUMBER && guestsNumber !== 0) {
@@ -81,27 +89,12 @@
         priceField.setCustomValidity(VALIDATION_MESSAGES[8]);
         break;
     }
-
-    priceField.reportValidity();
   };
 
   const onPriceFieldCheck = (evt) => {
     const selectedIndex = typeField.options.selectedIndex;
-    let priceMin = 0;
-
+    const priceMin = priceMap[typeField.value];
     priceField.setCustomValidity(``);
-
-    switch (typeField.value) {
-      case `flat`:
-        priceMin = 1000;
-        break;
-      case `house`:
-        priceMin = 5000;
-        break;
-      case `palace`:
-        priceMin = 10000;
-        break;
-    }
 
     if (priceField.value < priceMin) {
       priceField.setCustomValidity(`Для типа жилья "${typeField.options[selectedIndex].text}" ` + VALIDATION_MESSAGES[9] + ` ${priceMin} руб.`);
@@ -117,17 +110,17 @@
   };
 
   const onTimeFieldsCheck = (evt) => {
-    const syncField = evt.target === checkinField ? checkoutField : checkinField;
-    syncField.options[evt.target.options.selectedIndex].selected = true;
+    checkinField.value = evt.target.value;
+    checkoutField.value = evt.target.value;
   };
 
   const setValidation = () => {
-    window.options.capacityField.addEventListener(`change`, onCapacityFieldCheck);
+    capacityField.addEventListener(`change`, onCapacityFieldCheck);
     roomsField.addEventListener(`change`, onCapacityFieldCheck);
-    titleField.addEventListener(`input`, onTitleFieldCheck);
+    titleField.addEventListener(`change`, onTitleFieldCheck);
     titleField.addEventListener(`invalid`, onTitleFieldInvalid);
     priceField.addEventListener(`invalid`, onPriceFieldInvalid);
-    priceField.addEventListener(`input`, onPriceFieldCheck);
+    priceField.addEventListener(`change`, onPriceFieldCheck);
     typeField.addEventListener(`change`, onPriceFieldCheck);
     checkinField.addEventListener(`change`, onTimeFieldsCheck);
     checkoutField.addEventListener(`change`, onTimeFieldsCheck);

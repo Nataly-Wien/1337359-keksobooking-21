@@ -1,6 +1,7 @@
 'use strict';
 
 (() => {
+  const mapPins = document.querySelector(`.map__pins`);
   const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
 
   const generatePin = (notice) => {
@@ -15,26 +16,21 @@
     pin.querySelector(`img`).alt = notice.offer.title;
     pin.style.left = `${notice.location.x}px`;
     pin.style.top = `${notice.location.y}px`;
+    pin.dataset.id = notice.id;
 
     return pin;
   };
 
   const getPinBlock = (notices) => {
     const fragment = document.createDocumentFragment();
-
-    for (let i = 0; i < notices.length; i++) {
-      let pin = generatePin(notices[i]);
-      pin.setAttribute(`data-id`, notices[i].id);
-      fragment.appendChild(pin);
-    }
-
+    notices.forEach((item) => fragment.appendChild(generatePin(item)));
     return fragment;
   };
 
-  const setPinsOffset = () => {
+  const showPins = () => {
+    mapPins.appendChild(getPinBlock(window.options.noticesList));
 
-    // попробовать засунуть это перед ретурн в гетпинблок
-    const pins = window.options.mapPins.querySelectorAll(`.map__pin:not(.map__pin--main)`);
+    const pins = mapPins.querySelectorAll(`.map__pin:not(.map__pin--main)`);
     const pinStyle = window.getComputedStyle(pins[0]);
 
     pins.forEach((element) => {
@@ -44,8 +40,6 @@
   };
 
   window.pins = {
-    getPinBlock,
-    setPinsOffset,
-    // и предыдущую тогда убрать
+    showPins,
   };
 })();

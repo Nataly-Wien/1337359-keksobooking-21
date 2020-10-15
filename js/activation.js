@@ -2,17 +2,10 @@
 
 (() => {
   const {
-    NOTICES_NUMBER,
     map,
-    mapPins,
     mainPin,
     noticeForm,
     filterForm,
-    capacityField,
-  } = window.options;
-
-  let {
-    isPageActive,
   } = window.options;
 
   const noticeFormElements = noticeForm.querySelectorAll(`fieldset`);
@@ -25,45 +18,35 @@
     });
   };
 
-  const activatePage = (evt) => {
-    if (isPageActive || !(evt.button === 0 || evt.key === `Enter`)) {
+  const onMainPinClick = (evt) => {
+    if (window.options.isPageActive || !(evt.button === 0 || evt.key === `Enter`)) {
       return;
     }
 
-    isPageActive = true;
-    if (map.classList.contains(`map--faded`)) {
-      map.classList.remove(`map--faded`);
-    }
-
-    if (noticeForm.classList.contains(`ad-form--disabled`)) {
-      noticeForm.classList.remove(`ad-form--disabled`);
-    }
+    window.options.isPageActive = true;
+    map.classList.remove(`map--faded`);
+    noticeForm.classList.remove(`ad-form--disabled`);
 
     toggleElementsStyle(noticeFormElements, false);
     toggleElementsStyle(filterFormElements, false);
 
     addressField.value = window.utils.getPinCoords(mainPin);
-    capacityField.options[2].selected = true;
+    document.querySelector(`select[id="capacity"]`).selectedIndex = 2;
 
-    window.options.noticesList = window.mocks.getNoticesList(NOTICES_NUMBER);
+    window.options.noticesList = window.mocks.getNoticesList();
     window.options.noticesList.map((item, index) => {
       item.id = index;
     });
 
-    mapPins.appendChild(window.pins.getPinBlock(window.options.noticesList));
-    window.pins.setPinsOffset();
+    window.pins.showPins();
   };
 
   const deactivatePage = () => {
-    isPageActive = false;
+    window.options.isPageActive = false;
 
-    if (!map.classList.contains(`map--faded`)) {
-      map.classList.add(`map--faded`);
-    }
+    map.classList.add(`map--faded`);
 
-    if (!noticeForm.classList.contains(`ad-form--disabled`)) {
-      noticeForm.classList.add(`ad-form--disabled`);
-    }
+    noticeForm.classList.add(`ad-form--disabled`);
 
     toggleElementsStyle(noticeFormElements, true);
     toggleElementsStyle(filterFormElements, true);
@@ -72,8 +55,8 @@
   };
 
   const setActivationListener = () => {
-    mainPin.addEventListener(`mousedown`, activatePage);
-    mainPin.addEventListener(`keydown`, activatePage);
+    mainPin.addEventListener(`mousedown`, onMainPinClick);
+    mainPin.addEventListener(`keydown`, onMainPinClick);
   };
 
   window.activation = {
