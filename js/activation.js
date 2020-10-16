@@ -1,57 +1,44 @@
 'use strict';
 
 (() => {
-  const {
-    map,
-    mainPin,
-    noticeForm,
-    filterForm,
-  } = window.options;
+  const MAIN_PIN_WIDTH = 65;
+  const MAIN_PIN_HEIGHT = 65;
+  const MAIN_PIN_TALE = 22;
+  const mainPinTotalHeight = MAIN_PIN_HEIGHT + MAIN_PIN_TALE;
 
-  const noticeFormElements = noticeForm.querySelectorAll(`fieldset`);
-  const filterFormElements = filterForm.querySelectorAll(`select, fieldset`);
-  const addressField = noticeForm.querySelector(`input[id="address"]`);
+  const mainPin = document.querySelector(`.map__pin--main`);
 
-  const toggleElementsStyle = (list, state) => {
-    list.forEach((elem) => {
-      elem.disabled = state;
-    });
+  const getPinCoords = (element) => {
+    const currentY = window.utils.isPageActive ? mainPinTotalHeight : Math.round(MAIN_PIN_HEIGHT / 2);
+    const x = parseInt(element.style.left, 10) + Math.round(MAIN_PIN_WIDTH / 2);
+    const y = parseInt(element.style.top, 10) + currentY;
+
+    return `${x}, ${y}`;
   };
 
   const onMainPinClick = (evt) => {
-    if (window.options.isPageActive || !(evt.button === 0 || evt.key === `Enter`)) {
+    if (window.utils.isPageActive || !(evt.button === 0 || evt.key === `Enter`)) {
       return;
     }
 
-    window.options.isPageActive = true;
-    map.classList.remove(`map--faded`);
-    noticeForm.classList.remove(`ad-form--disabled`);
+    evt.stopImmediatePropagation();
+    window.utils.isPageActive = true;
 
-    toggleElementsStyle(noticeFormElements, false);
-    toggleElementsStyle(filterFormElements, false);
-
-    addressField.value = window.utils.getPinCoords(mainPin);
+    window.forms.enableForms();
+    window.forms.addressField.value = getPinCoords(mainPin);
     document.querySelector(`select[id="capacity"]`).selectedIndex = 2;
 
-    window.options.noticesList = window.mocks.getNoticesList();
-    window.options.noticesList.map((item, index) => {
+    window.pins.noticesList = window.mocks.getNoticesList();
+    window.pins.noticesList.map((item, index) => {
       item.id = index;
     });
-
     window.pins.showPins();
   };
 
   const deactivatePage = () => {
-    window.options.isPageActive = false;
-
-    map.classList.add(`map--faded`);
-
-    noticeForm.classList.add(`ad-form--disabled`);
-
-    toggleElementsStyle(noticeFormElements, true);
-    toggleElementsStyle(filterFormElements, true);
-
-    addressField.value = window.utils.getPinCoords(mainPin);
+    window.utils.isPageActive = false;
+    window.forms.disableForms();
+    window.forms.addressField.value = getPinCoords(mainPin);
   };
 
   const setActivationListener = () => {
@@ -62,5 +49,8 @@
   window.activation = {
     setActivationListener,
     deactivatePage,
+    getPinCoords,
+    MAIN_PIN_WIDTH,
+    mainPinTotalHeight,
   };
 })();

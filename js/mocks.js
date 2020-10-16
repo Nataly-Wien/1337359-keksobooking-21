@@ -11,9 +11,6 @@
 
   const CHECK_IN = 12;
   const CHECK_OUT = 14;
-  const LOCATION_Y_MIN = 130;
-  const LOCATION_Y_MAX = 630;
-  const LOCATION_X_MIN = 0;
   const PHOTOS_PATH = `http://o0.github.io/assets/images/tokyo/hotel1.jpg`;
 
   const TYPE_LIST = [
@@ -32,14 +29,12 @@
     `conditioner`
   ];
 
-  const locationXMax = window.options.mapPins.clientWidth;
-
   const getNoticesList = () => {
     const notices = [];
 
     for (let i = 1; i <= NOTICES_NUMBER; i++) {
-      const locX = window.utils.getRandomInRange(locationXMax, LOCATION_X_MIN);
-      const locY = window.utils.getRandomInRange(LOCATION_Y_MAX, LOCATION_Y_MIN);
+      const locX = window.utils.getRandomInRange(window.utils.locationXMax, window.utils.LOCATION_X_MIN);
+      const locY = window.utils.getRandomInRange(window.utils.LOCATION_Y_MAX, window.utils.LOCATION_Y_MIN);
       notices.push({
         author: {
           avatar: `img/avatars/user0${i}.png`,
