@@ -1,6 +1,13 @@
 'use strict';
 
 (() => {
+  const LOCATION_Y_MIN = 130;
+  const LOCATION_Y_MAX = 630;
+  const LOCATION_X_MIN = 0;
+  const locationXMax = document.querySelector(`.map__pins`).clientWidth;
+
+  let isPageActive = false;
+
   const getRandomInRange = (max, min = 1) => Math.floor(Math.random() * (max - min + 1)) + min;
 
   const getRandomFromList = (list) => list[getRandomInRange(list.length - 1, 0)];
@@ -24,23 +31,16 @@
     return forms[number > 4 && number < 20 ? 2 : cases[Math.min(number % 10, 5)]];
   };
 
-  const getPinCoords = (element) => {
-    const elemStyle = window.getComputedStyle(element);
-    const currentY = window.options.isPageActive
-      ? parseInt(elemStyle.height, 10)
-      : Math.round(parseInt(elemStyle.height, 10) / 2);
-    const x = parseInt(element.style.left, 10) + Math.round(parseInt(elemStyle.width, 10) / 2);
-    const y = parseInt(element.style.top, 10) + currentY;
-
-    return `${x}, ${y}`;
-  };
-
   window.utils = {
     getRandomInRange,
     getRandomFromList,
     getRandomArrayFromList,
     getRandomPhotosArray,
     getWordForm,
-    getPinCoords,
+    LOCATION_X_MIN,
+    locationXMax,
+    LOCATION_Y_MIN,
+    LOCATION_Y_MAX,
+    isPageActive,
   };
 })();
