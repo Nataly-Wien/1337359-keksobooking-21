@@ -35,7 +35,7 @@
     const errorBlock = document.createElement(`div`);
     errorBlock.textContent = message;
     errorBlock.classList.add(`error-message`);
-    document.querySelector(`.map__pins`).insertAdjacentElement('afterbegin', errorBlock);
+    document.querySelector(`.map__pins`).insertAdjacentElement(`afterbegin`, errorBlock);
   };
 
   window.utils = {

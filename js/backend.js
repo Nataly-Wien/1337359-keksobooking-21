@@ -1,8 +1,8 @@
 'use strict';
 
 (() => {
-  const loadURL = `https://21.javascript.pages.academy/keksobooking/data`;
-  const sendURL = `https://21.javascript.pages.academy/keksobooking`;
+  const API_URL = `https://21.javascript.pages.academy/keksobooking`;
+
   const TIMEOUT = 10000;
   const statusCode = {
     OK: 200,
@@ -29,13 +29,13 @@
 
   const load = (onLoad, onError) => {
     const xhr = createRequest(onLoad, onError);
-    xhr.open(`GET`, loadURL);
+    xhr.open(`GET`, API_URL + `/data`);
     xhr.send();
   };
 
   const save = (data, onLoad, onError) => {
     const xhr = createRequest(onLoad, onError);
-    xhr.open(`POST`, sendURL);
+    xhr.open(`POST`, API_URL);
     xhr.send(data);
   };
 
