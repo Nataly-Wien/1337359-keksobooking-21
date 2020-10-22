@@ -3,7 +3,6 @@
   const map = document.querySelector(`.map`);
   const filterForm = map.querySelector(`.map__filters`);
   const noticeForm = document.querySelector(`.ad-form`);
-  const addressField = noticeForm.querySelector(`input[id="address"]`);
 
   const noticeFormElements = noticeForm.querySelectorAll(`fieldset`);
   const filterFormElements = filterForm.querySelectorAll(`select, fieldset`);
@@ -31,8 +30,6 @@
   };
 
   window.forms = {
-    map,
-    addressField,
     enableForms,
     disableForms,
   };

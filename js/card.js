@@ -11,7 +11,9 @@
     bungalow: `Бунгало`
   };
 
-  const cardInsertPosition = window.forms.map.querySelector(`.map__filters-container`);
+  const map = document.querySelector(`.map`);
+  const cardInsertPosition = map.querySelector(`.map__filters-container`);
+
   let isCardOpen = false;
   let currentCard = null;
 
@@ -77,7 +79,7 @@
     }
 
     currentCard = getNoticeCard(notice);
-    window.forms.map.insertBefore(currentCard, cardInsertPosition);
+    map.insertBefore(currentCard, cardInsertPosition);
     isCardOpen = true;
 
     document.addEventListener(`keydown`, onDocumentKeydown);
@@ -101,7 +103,7 @@
   const onCloseButtonClick = () => closeCard();
 
   const onMapClickOrKeydown = (evt) => {
-    const pin = evt.target.closest(`button`);
+    const pin = evt.target.closest(`.map__pin:not(.map__pin--main)`);
     const activePin = document.querySelector(`.map__pin--active`);
 
     if (!pin || (activePin === pin && isCardOpen)) {
