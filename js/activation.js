@@ -17,12 +17,10 @@
     return `${x}, ${y}`;
   };
 
-  const addPins = (noticesList) => {
+  const onSuccess = (dataList) => {
+    const noticesList = window.utils.addIdToData(dataList);
     window.pins.noticesList = noticesList;
-    window.pins.noticesList.map((item, index) => {
-      item.id = index;
-    });
-    window.pins.showPins();
+    window.pins.showPins(noticesList);
   };
 
   const onMainPinClick = (evt) => {
@@ -30,14 +28,11 @@
       return;
     }
 
-    evt.stopImmediatePropagation();
     window.utils.isPageActive = true;
-
     window.forms.enableForms();
     addressField.value = getPinCoords(mainPin);
-    document.querySelector(`select[id="capacity"]`).selectedIndex = 2;
 
-    window.backend.load(addPins, window.utils.showError);
+    window.backend.load(onSuccess, window.utils.showError);
   };
 
   const deactivatePage = () => {

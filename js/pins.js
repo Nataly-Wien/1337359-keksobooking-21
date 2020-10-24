@@ -4,13 +4,10 @@
   const PIN_WIDTH = 50;
   const PIN_HEIGHT = 70;
 
-  const noticesList = [];
   const mapPins = document.querySelector(`.map__pins`);
-
   const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
 
   const generatePin = (notice) => {
-
     const pin = pinTemplate.cloneNode(true);
 
     if (Object.keys(notice.offer).length === 0) {
@@ -33,12 +30,11 @@
     return fragment;
   };
 
-  const showPins = () => {
-    mapPins.appendChild(getPinBlock(window.pins.noticesList));
+  const showPins = (noticesList) => {
+    mapPins.appendChild(getPinBlock(noticesList));
   };
 
   window.pins = {
-    noticesList,
     mapPins,
     showPins,
   };

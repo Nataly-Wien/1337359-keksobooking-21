@@ -29,6 +29,16 @@
     toggleElementsStyle(filterFormElements, true);
   };
 
+  const onFormSubmit = (evt) => {
+    evt.preventDefault();
+
+    if (window.validation.onCapacityFieldCheck(evt)) {
+      // отправка формы
+    }
+  };
+
+  noticeForm.addEventListener(`submit`, onFormSubmit);
+
   window.forms = {
     enableForms,
     disableForms,

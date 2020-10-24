@@ -26,30 +26,36 @@
     palace: 10000,
   };
 
-  const roomsField = document.querySelector(`select[id="room_number"]`);
-  const capacityField = document.querySelector(`select[id="capacity"]`);
-  const titleField = document.querySelector(`input[id="title"]`);
-  const priceField = document.querySelector(`input[id="price"]`);
-  const typeField = document.querySelector(`select[id="type"]`);
-  const checkinField = document.querySelector(`select[id="timein"]`);
-  const checkoutField = document.querySelector(`select[id="timeout"]`);
+  const noticeForm = document.querySelector(`.ad-form`);
+  const roomsField = noticeForm.querySelector(`select[id="room_number"]`);
+  const capacityField = noticeForm.querySelector(`select[id="capacity"]`);
+  const titleField = noticeForm.querySelector(`input[id="title"]`);
+  const priceField = noticeForm.querySelector(`input[id="price"]`);
+  const typeField = noticeForm.querySelector(`select[id="type"]`);
+  const checkinField = noticeForm.querySelector(`select[id="timein"]`);
+  const checkoutField = noticeForm.querySelector(`select[id="timeout"]`);
 
   const onCapacityFieldCheck = (evt) => {
     const GUEST_MESSAGE_FORMS = [`гостя`, `гостей`, `гостей`];
 
     const roomsNumber = Number(roomsField.value);
     const guestsNumber = Number(capacityField.value);
+    let target = evt.target;
+
+    if (evt.target === noticeForm) {
+      target = capacityField;
+    }
 
     roomsField.setCustomValidity(``);
     capacityField.setCustomValidity(``);
     if (guestsNumber > roomsNumber && roomsNumber !== SPECIAL_ROOMS_NUMBER) {
-      evt.target.setCustomValidity(`${VALIDATION_MESSAGES[0]} ${roomsNumber} ${window.utils.getWordForm(roomsNumber, GUEST_MESSAGE_FORMS)}`);
+      target.setCustomValidity(`${VALIDATION_MESSAGES[0]} ${roomsNumber} ${window.utils.getWordForm(roomsNumber, GUEST_MESSAGE_FORMS)}`);
     } else if (roomsNumber === SPECIAL_ROOMS_NUMBER && guestsNumber !== 0) {
-      evt.target.setCustomValidity(VALIDATION_MESSAGES[1]);
+      target.setCustomValidity(VALIDATION_MESSAGES[1]);
     } else if (roomsNumber !== SPECIAL_ROOMS_NUMBER && guestsNumber === 0) {
-      evt.target.setCustomValidity(VALIDATION_MESSAGES[2]);
+      target.setCustomValidity(VALIDATION_MESSAGES[2]);
     }
-    evt.target.reportValidity();
+    return target.reportValidity();
   };
 
   const onTitleFieldCheck = () => {
@@ -67,8 +73,6 @@
       titleField.setCustomValidity(VALIDATION_MESSAGES[5] +
         `${fieldLength - TITLE_MAXLENGTH} ${window.utils.getWordForm(fieldLength - TITLE_MAXLENGTH, TITLE_MESSAGE_FORMS)}`);
     }
-
-    titleField.reportValidity();
   };
 
   const onTitleFieldInvalid = () => {
@@ -114,6 +118,10 @@
     checkoutField.value = evt.target.value;
   };
 
+  const resetCustomValidity = (evt) => {
+    evt.target.setCustomValidity(``);
+  };
+
   const setValidation = () => {
     capacityField.addEventListener(`change`, onCapacityFieldCheck);
     roomsField.addEventListener(`change`, onCapacityFieldCheck);
@@ -124,9 +132,12 @@
     typeField.addEventListener(`change`, onPriceFieldCheck);
     checkinField.addEventListener(`change`, onTimeFieldsCheck);
     checkoutField.addEventListener(`change`, onTimeFieldsCheck);
+    titleField.addEventListener(`input`, resetCustomValidity);
+    priceField.addEventListener(`input`, resetCustomValidity);
   };
 
   window.validation = {
+    onCapacityFieldCheck,
     setValidation,
   };
 })();

@@ -38,6 +38,10 @@
     document.querySelector(`.map__pins`).insertAdjacentElement(`afterbegin`, errorBlock);
   };
 
+  const addIdToData = (dataArray) => dataArray.map((item, index) => Object.assign(item, {
+    id: index
+  }));
+
   window.utils = {
     getRandomInRange,
     getRandomFromList,
@@ -45,6 +49,7 @@
     getRandomPhotosArray,
     getWordForm,
     showError,
+    addIdToData,
     LOCATION_X_MIN,
     locationXMax,
     LOCATION_Y_MIN,
