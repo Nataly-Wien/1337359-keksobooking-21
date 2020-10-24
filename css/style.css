@@ -1246,3 +1246,16 @@ fieldset {
 .hidden {
   display: none;
 }
+
+.error-message {
+    position: absolute;
+    z-index: 30;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    padding: 5px;
+    font-size: 14px;
+    text-align: center;
+    background-color: tomato;
+    color: white;
+}

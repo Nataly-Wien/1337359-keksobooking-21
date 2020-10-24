@@ -2,6 +2,7 @@
 
 (() => {
   const mainPin = document.querySelector(`.map__pin--main`);
+  const addressField = document.querySelector(`input[id="address"]`);
 
   const onPinDown = (downEvt) => {
     if (!window.utils.isPageActive) {
@@ -40,7 +41,7 @@
         mainPin.style.top = `${currentY}px`;
       }
 
-      window.forms.addressField.value = window.activation.getPinCoords(mainPin);
+      addressField.value = window.activation.getPinCoords(mainPin);
 
       startCoords.x = moveEvt.clientX;
       startCoords.y = moveEvt.clientY;
@@ -48,7 +49,7 @@
 
     const onTargetUp = (upEvt) => {
       upEvt.preventDefault(upEvt);
-      window.forms.addressField.value = window.activation.getPinCoords(mainPin);
+      addressField.value = window.activation.getPinCoords(mainPin);
 
       if (isDragged) {
         const onTargetClick = (clickEvt) => {
@@ -71,12 +72,7 @@
     mainPin.addEventListener(`mousedown`, onPinDown);
   };
 
-  const removeMovingListener = () => {
-    mainPin.removeEventListener(`mousedown`, onPinDown);
-  };
-
   window.movePin = {
     setMovingListener,
-    removeMovingListener
   };
 })();

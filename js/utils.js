@@ -31,12 +31,25 @@
     return forms[number > 4 && number < 20 ? 2 : cases[Math.min(number % 10, 5)]];
   };
 
+  const showError = (message) => {
+    const errorBlock = document.createElement(`div`);
+    errorBlock.textContent = message;
+    errorBlock.classList.add(`error-message`);
+    document.querySelector(`.map__pins`).insertAdjacentElement(`afterbegin`, errorBlock);
+  };
+
+  const addIdToData = (dataArray) => dataArray.map((item, index) => Object.assign(item, {
+    id: index
+  }));
+
   window.utils = {
     getRandomInRange,
     getRandomFromList,
     getRandomArrayFromList,
     getRandomPhotosArray,
     getWordForm,
+    showError,
+    addIdToData,
     LOCATION_X_MIN,
     locationXMax,
     LOCATION_Y_MIN,

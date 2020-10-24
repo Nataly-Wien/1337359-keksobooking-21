@@ -7,6 +7,7 @@
   const mainPinTotalHeight = MAIN_PIN_HEIGHT + MAIN_PIN_TALE;
 
   const mainPin = document.querySelector(`.map__pin--main`);
+  const addressField = document.querySelector(`input[id="address"]`);
 
   const getPinCoords = (element) => {
     const currentY = window.utils.isPageActive ? mainPinTotalHeight : Math.round(MAIN_PIN_HEIGHT / 2);
@@ -16,29 +17,28 @@
     return `${x}, ${y}`;
   };
 
+  const onSuccess = (dataList) => {
+    const noticesList = window.utils.addIdToData(dataList);
+    window.pins.noticesList = noticesList;
+    window.pins.showPins(noticesList);
+  };
+
   const onMainPinClick = (evt) => {
     if (window.utils.isPageActive || !(evt.button === 0 || evt.key === `Enter`)) {
       return;
     }
 
-    evt.stopImmediatePropagation();
     window.utils.isPageActive = true;
-
     window.forms.enableForms();
-    window.forms.addressField.value = getPinCoords(mainPin);
-    document.querySelector(`select[id="capacity"]`).selectedIndex = 2;
+    addressField.value = getPinCoords(mainPin);
 
-    window.pins.noticesList = window.mocks.getNoticesList();
-    window.pins.noticesList.map((item, index) => {
-      item.id = index;
-    });
-    window.pins.showPins();
+    window.backend.load(onSuccess, window.utils.showError);
   };
 
   const deactivatePage = () => {
     window.utils.isPageActive = false;
     window.forms.disableForms();
-    window.forms.addressField.value = getPinCoords(mainPin);
+    addressField.value = getPinCoords(mainPin);
   };
 
   const setActivationListener = () => {

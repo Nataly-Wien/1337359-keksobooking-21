@@ -3,7 +3,6 @@
   const map = document.querySelector(`.map`);
   const filterForm = map.querySelector(`.map__filters`);
   const noticeForm = document.querySelector(`.ad-form`);
-  const addressField = noticeForm.querySelector(`input[id="address"]`);
 
   const noticeFormElements = noticeForm.querySelectorAll(`fieldset`);
   const filterFormElements = filterForm.querySelectorAll(`select, fieldset`);
@@ -30,9 +29,17 @@
     toggleElementsStyle(filterFormElements, true);
   };
 
+  const onFormSubmit = (evt) => {
+    evt.preventDefault();
+
+    if (window.validation.onCapacityFieldCheck(evt)) {
+      // отправка формы
+    }
+  };
+
+  noticeForm.addEventListener(`submit`, onFormSubmit);
+
   window.forms = {
-    map,
-    addressField,
     enableForms,
     disableForms,
   };
