@@ -88,6 +88,9 @@
   };
 
   const closeCard = () => {
+    if (!isCardOpen) {
+      return;
+    }
     document.removeEventListener(`keydown`, onDocumentKeydown);
     isCardOpen = false;
     currentCard.remove();
@@ -122,5 +125,6 @@
 
   window.card = {
     onMapClickOrKeydown,
+    closeCard,
   };
 })();

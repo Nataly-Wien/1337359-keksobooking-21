@@ -19,6 +19,8 @@
     `цена не может быть меньше, чем`,
   ];
 
+  const GUEST_MESSAGE_FORMS = [`гостя`, `гостей`, `гостей`];
+
   const priceMap = {
     bungalow: 0,
     flat: 1000,
@@ -36,8 +38,6 @@
   const checkoutField = noticeForm.querySelector(`select[id="timeout"]`);
 
   const onCapacityFieldCheck = (evt) => {
-    const GUEST_MESSAGE_FORMS = [`гостя`, `гостей`, `гостей`];
-
     const roomsNumber = Number(roomsField.value);
     const guestsNumber = Number(capacityField.value);
     let target = evt.target;

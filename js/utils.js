@@ -38,7 +38,7 @@
     document.querySelector(`.map__pins`).insertAdjacentElement(`afterbegin`, errorBlock);
   };
 
-  const addIdToData = (dataArray) => dataArray.map((item, index) => Object.assign(item, {
+  const addIdToData = (dataArray) => dataArray.map((item, index) => Object.assign({}, item, {
     id: index
   }));
 

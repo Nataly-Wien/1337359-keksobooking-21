@@ -4,6 +4,11 @@
   const mainPin = document.querySelector(`.map__pin--main`);
   const addressField = document.querySelector(`input[id="address"]`);
 
+  const initialCoords = {
+    x: mainPin.style.left,
+    y: mainPin.style.top,
+  };
+
   const onPinDown = (downEvt) => {
     if (!window.utils.isPageActive) {
       return;
@@ -72,7 +77,14 @@
     mainPin.addEventListener(`mousedown`, onPinDown);
   };
 
+  const returnPinToStart = () => {
+    mainPin.style.left = initialCoords.x;
+    mainPin.style.top = initialCoords.y;
+    addressField.value = window.activation.getPinCoords(mainPin);
+  };
+
   window.movePin = {
     setMovingListener,
+    returnPinToStart,
   };
 })();
