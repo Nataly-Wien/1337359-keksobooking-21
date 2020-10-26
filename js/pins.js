@@ -34,8 +34,16 @@
     mapPins.appendChild(getPinBlock(noticesList));
   };
 
+  const removePins = () => {
+    mapPins.querySelectorAll(`.map__pin:not(.map__pin--main)`).forEach((node) => {
+      mapPins.removeChild(node);
+    });
+
+  };
+
   window.pins = {
     mapPins,
     showPins,
+    removePins,
   };
 })();
