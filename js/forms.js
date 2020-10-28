@@ -19,11 +19,13 @@
     });
   };
 
-  const enableForms = () => {
+  const enableNoticeForm = () => {
     map.classList.remove(`map--faded`);
     noticeForm.classList.remove(`ad-form--disabled`);
-
     toggleElementsStyle(noticeFormElements, false);
+  };
+
+  const enableFilterForm = () => {
     toggleElementsStyle(filterFormElements, false);
   };
 
@@ -50,21 +52,20 @@
 
   const showMessage = (message) => {
     const closeMessage = () => {
-      window.removeEventListener(`keydown`, onKeyDown);
-      window.removeEventListener(`click`, closeMessage);
+      document.removeEventListener(`keydown`, onKeyDown);
+      document.removeEventListener(`click`, closeMessage);
       main.removeChild(message);
     };
 
     const onKeyDown = (evt) => {
-      if (evt.code === `Escape`) {
-        evt.preventDefault();
+      if (evt.key === `Escape`) {
         closeMessage();
       }
     };
 
     main.insertAdjacentElement(`afterbegin`, message);
-    window.addEventListener(`click`, closeMessage);
-    window.addEventListener(`keydown`, onKeyDown);
+    document.addEventListener(`click`, closeMessage);
+    document.addEventListener(`keydown`, onKeyDown);
 
     const errorButton = message.querySelector(`.error__button`);
     if (errorButton) {
@@ -94,7 +95,8 @@
   resetButton.addEventListener(`click`, resetToInitial);
 
   window.forms = {
-    enableForms,
+    enableNoticeForm,
+    enableFilterForm,
     disableForms,
   };
 })();
