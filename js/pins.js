@@ -31,6 +31,8 @@
   };
 
   const showPins = (noticesList) => {
+    removePins();
+    window.card.closeCard();
     mapPins.appendChild(getPinBlock(noticesList));
   };
 

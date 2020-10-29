@@ -20,7 +20,8 @@
   const onSuccess = (dataList) => {
     const noticesList = window.utils.addIdToData(dataList);
     window.pins.noticesList = noticesList;
-    window.pins.showPins(noticesList);
+    window.pins.showPins(window.filters.getFilteredList(noticesList));
+    window.forms.enableFilterForm();
   };
 
   const onMainPinClick = (evt) => {
@@ -29,7 +30,7 @@
     }
 
     window.utils.isPageActive = true;
-    window.forms.enableForms();
+    window.forms.enableNoticeForm();
     addressField.value = getPinCoords(mainPin);
 
     window.backend.load(onSuccess, window.utils.showError);
