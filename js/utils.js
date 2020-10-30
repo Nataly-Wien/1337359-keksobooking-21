@@ -42,6 +42,22 @@
     id: index
   }));
 
+  const debounce = (fn, timeout = 500) => {
+    let lastTimeout = null;
+
+    return function (...args) {
+      if (lastTimeout) {
+        clearTimeout(lastTimeout);
+      }
+
+      const functionCall = function () {
+        return fn(...args);
+      };
+
+      lastTimeout = setTimeout(functionCall, timeout);
+    };
+  };
+
   window.utils = {
     getRandomInRange,
     getRandomFromList,
@@ -50,6 +66,7 @@
     getWordForm,
     showError,
     addIdToData,
+    debounce,
     LOCATION_X_MIN,
     locationXMax,
     LOCATION_Y_MIN,

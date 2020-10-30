@@ -62,7 +62,7 @@
   const onFormChange = () => window.pins.showPins(getFilteredList(window.pins.noticesList));
 
   const setFiltersListener = () => {
-    filterForm.addEventListener(`change`, window.debounce.debounce(onFormChange));
+    filterForm.addEventListener(`change`, window.utils.debounce(onFormChange));
   };
 
   window.filters = {
