@@ -22,7 +22,7 @@
   "scripts": {
     "test": "eslint js/",
     "build": "webpack --mode production",
-    "start": "webpack-dev-server"
+    "start": "webpack serve"
   },
   "engines": {
     "node": "8.11"
