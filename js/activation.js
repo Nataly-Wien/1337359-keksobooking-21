@@ -1,57 +1,55 @@
 'use strict';
 
-(() => {
-  const MAIN_PIN_WIDTH = 65;
-  const MAIN_PIN_HEIGHT = 65;
-  const MAIN_PIN_TALE = 22;
-  const mainPinTotalHeight = MAIN_PIN_HEIGHT + MAIN_PIN_TALE;
+const MAIN_PIN_WIDTH = 65;
+const MAIN_PIN_HEIGHT = 65;
+const MAIN_PIN_TALE = 22;
+const mainPinTotalHeight = MAIN_PIN_HEIGHT + MAIN_PIN_TALE;
 
-  const mainPin = document.querySelector(`.map__pin--main`);
-  const addressField = document.querySelector(`input[id="address"]`);
+const mainPin = document.querySelector(`.map__pin--main`);
+const addressField = document.querySelector(`input[id="address"]`);
 
-  const getPinCoords = (element) => {
-    const currentY = window.utils.isPageActive ? mainPinTotalHeight : Math.round(MAIN_PIN_HEIGHT / 2);
-    const x = parseInt(element.style.left, 10) + Math.round(MAIN_PIN_WIDTH / 2);
-    const y = parseInt(element.style.top, 10) + currentY;
+const getPinCoords = (element) => {
+  const currentY = window.utils.isPageActive ? mainPinTotalHeight : Math.round(MAIN_PIN_HEIGHT / 2);
+  const x = parseInt(element.style.left, 10) + Math.round(MAIN_PIN_WIDTH / 2);
+  const y = parseInt(element.style.top, 10) + currentY;
 
-    return `${x}, ${y}`;
-  };
+  return `${x}, ${y}`;
+};
 
-  const onSuccess = (dataList) => {
-    const noticesList = window.utils.addIdToData(dataList);
-    window.pins.noticesList = noticesList;
-    window.pins.showPins(window.filters.getFilteredList(noticesList));
-    window.forms.enableFilterForm();
-  };
+const onSuccess = (dataList) => {
+  const noticesList = window.utils.addIdToData(dataList);
+  window.pins.noticesList = noticesList;
+  window.pins.showPins(window.filters.getFilteredList(noticesList));
+  window.forms.enableFilterForm();
+};
 
-  const onMainPinClick = (evt) => {
-    if (window.utils.isPageActive || !(evt.button === 0 || evt.key === `Enter`)) {
-      return;
-    }
+const onMainPinClick = (evt) => {
+  if (window.utils.isPageActive || !(evt.button === 0 || evt.key === `Enter`)) {
+    return;
+  }
 
-    window.utils.isPageActive = true;
-    window.forms.enableNoticeForm();
-    addressField.value = getPinCoords(mainPin);
+  window.utils.isPageActive = true;
+  window.forms.enableNoticeForm();
+  addressField.value = getPinCoords(mainPin);
 
-    window.backend.load(onSuccess, window.utils.showError);
-  };
+  window.backend.load(onSuccess, window.utils.showError);
+};
 
-  const deactivatePage = () => {
-    window.utils.isPageActive = false;
-    window.forms.disableForms();
-    addressField.value = getPinCoords(mainPin);
-  };
+const deactivatePage = () => {
+  window.utils.isPageActive = false;
+  window.forms.disableForms();
+  addressField.value = getPinCoords(mainPin);
+};
 
-  const setActivationListener = () => {
-    mainPin.addEventListener(`mousedown`, onMainPinClick);
-    mainPin.addEventListener(`keydown`, onMainPinClick);
-  };
+const setActivationListener = () => {
+  mainPin.addEventListener(`mousedown`, onMainPinClick);
+  mainPin.addEventListener(`keydown`, onMainPinClick);
+};
 
-  window.activation = {
-    setActivationListener,
-    deactivatePage,
-    getPinCoords,
-    MAIN_PIN_WIDTH,
-    mainPinTotalHeight,
-  };
-})();
+window.activation = {
+  setActivationListener,
+  deactivatePage,
+  getPinCoords,
+  MAIN_PIN_WIDTH,
+  mainPinTotalHeight,
+};
