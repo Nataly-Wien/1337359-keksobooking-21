@@ -1,5 +1,13 @@
 'use strict';
 
+const IMAGE_TYPES = [`image/gif`, `image/jpeg`, `image/png`];
+const IMAGE_MAX_SIZE = 512000;
+const IMAGE_ERROR_MESSAGE = [
+  `Максимальный размер файла - 500 Кб`,
+  `Неверный тип файла изображения`,
+  `Ошибка загрузки файла`,
+];
+
 const map = document.querySelector(`.map`);
 const filterForm = map.querySelector(`.map__filters`);
 const noticeForm = document.querySelector(`.ad-form`);
@@ -12,6 +20,11 @@ const successMessage = document.querySelector(`#success`).content.querySelector(
 const errorMessage = document.querySelector(`#error`).content.querySelector(`.error`);
 
 const resetButton = noticeForm.querySelector(`.ad-form__reset`);
+
+const avatarInput = noticeForm.querySelector(`#avatar`);
+const avatarPreview = noticeForm.querySelector(`.ad-form-header__preview img`);
+const photoInput = noticeForm.querySelector(`#images`);
+const photoPreview = noticeForm.querySelector(`.ad-form__photo`);
 
 const toggleElementsStyle = (list, state) => {
   list.forEach((elem) => {
@@ -91,8 +104,42 @@ const onFormSubmit = (evt) => {
   }
 };
 
+const onFileInputChange = function (imgContainer) {
+  return function (evt) {
+    const file = evt.target.files[0];
+
+    const isTypeMatch = () => IMAGE_TYPES.some((item) => file.type === item);
+    const isSizeMatch = () => file.size <= IMAGE_MAX_SIZE;
+
+    if (!isSizeMatch()) {
+      window.utils.showError(IMAGE_ERROR_MESSAGE[0]);
+    } else if (!isTypeMatch()) {
+      window.utils.showError(IMAGE_ERROR_MESSAGE[1]);
+    } else {
+      const reader = new FileReader();
+
+      reader.addEventListener(`load`, () => {
+        if (imgContainer.tagName === `IMG`) {
+          imgContainer.src = reader.result;
+        } else {
+          imgContainer.style.backgroundImage = `url(${reader.result})`;
+        }
+      });
+
+      reader.addEventListener(`error`, () => {
+        window.utils.showError(IMAGE_ERROR_MESSAGE[2]);
+      });
+
+      reader.readAsDataURL(file);
+    }
+  };
+};
+
 noticeForm.addEventListener(`submit`, onFormSubmit);
 resetButton.addEventListener(`click`, resetToInitial);
+
+avatarInput.addEventListener(`change`, onFileInputChange(avatarPreview));
+photoInput.addEventListener(`change`, onFileInputChange(photoPreview));
 
 window.forms = {
   enableNoticeForm,

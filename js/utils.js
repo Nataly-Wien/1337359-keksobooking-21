@@ -3,7 +3,9 @@
 const LOCATION_Y_MIN = 130;
 const LOCATION_Y_MAX = 630;
 const LOCATION_X_MIN = 0;
-const locationXMax = document.querySelector(`.map__pins`).clientWidth;
+
+const mapPins = document.querySelector(`.map__pins`);
+const locationXMax = mapPins.clientWidth;
 
 let isPageActive = false;
 
@@ -31,10 +33,18 @@ const getWordForm = (number, forms) => {
 };
 
 const showError = (message) => {
+  const onKeydown = (evt) => {
+    if (evt.key === `Escape`) {
+      document.removeEventListener(`keydown`, onKeydown);
+      mapPins.removeChild(errorBlock);
+    }
+  };
+
   const errorBlock = document.createElement(`div`);
   errorBlock.textContent = message;
   errorBlock.classList.add(`error-message`);
-  document.querySelector(`.map__pins`).insertAdjacentElement(`afterbegin`, errorBlock);
+  mapPins.insertAdjacentElement(`afterbegin`, errorBlock);
+  document.addEventListener(`keydown`, onKeydown);
 };
 
 const addIdToData = (dataArray) => dataArray.map((item, index) => Object.assign({}, item, {
