@@ -19,11 +19,13 @@ const onPinDown = (downEvt) => {
     x: downEvt.clientX,
     y: downEvt.clientY
   };
+
   let isDragged = false;
 
   const onTargetMove = (moveEvt) => {
     moveEvt.preventDefault();
     isDragged = true;
+
     const shift = {
       x: moveEvt.clientX - startCoords.x,
       y: moveEvt.clientY - startCoords.y

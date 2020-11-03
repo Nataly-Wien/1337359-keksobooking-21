@@ -789,6 +789,9 @@ fieldset {
   height: 70px;
 
   background-color: #e4e4de;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   border-radius: 5px;
 }
 
@@ -1250,7 +1253,7 @@ fieldset {
 .error-message {
     position: absolute;
     z-index: 30;
-    top: 0px;
+    bottom: 0px;
     left: 0px;
     right: 0px;
     padding: 5px;
