@@ -45,17 +45,17 @@ const isFeatures = (features) => {
   return checkboxes.every((feature) => features.includes(feature.value));
 };
 
-const getFilteredList = (arr) => {
-  const result = [];
+const getFilteredList = (list) => {
+  const results = [];
 
-  for (let i = 0; result.length < NOTICES_NUMBER && i < arr.length; i++) {
-    if (isType(arr[i].offer.type) && isPrice(arr[i].offer.price) && isRooms(arr[i].offer.rooms) &&
-      isGuests(arr[i].offer.guests) && isFeatures(arr[i].offer.features)) {
-      result.push(arr[i]);
+  for (let i = 0; results.length < NOTICES_NUMBER && i < list.length; i++) {
+    if (isType(list[i].offer.type) && isPrice(list[i].offer.price) && isRooms(list[i].offer.rooms) &&
+      isGuests(list[i].offer.guests) && isFeatures(list[i].offer.features)) {
+      results.push(list[i]);
     }
   }
 
-  return result;
+  return results;
 };
 
 const onFormChange = () => window.pins.showPins(getFilteredList(window.pins.noticesList));

@@ -3,7 +3,7 @@
 const ROOM_FORMS = [`комната`, `комнаты`, `комнат`];
 const GUEST_FORMS = [`гостя`, `гостей`, `гостей`];
 
-const OFFER_TYPE_MAP = {
+const OFFER_TYPE = {
   palace: `Дворец`,
   flat: `Квартира`,
   house: `Дом`,
@@ -47,7 +47,7 @@ const getNoticeCard = (notice) => {
   card.querySelector(`.popup__title`).textContent = title || ``;
   card.querySelector(`.popup__text--address`).textContent = address || ``;
   card.querySelector(`.popup__text--price`).textContent = price ? `${price}₽/ночь` : ``;
-  card.querySelector(`.popup__type`).textContent = type ? OFFER_TYPE_MAP[type] : ``;
+  card.querySelector(`.popup__type`).textContent = type ? OFFER_TYPE[type] : ``;
   card.querySelector(`.popup__text--capacity`).textContent = (rooms ? `${rooms} ${window.utils.getWordForm(rooms, ROOM_FORMS)}` : ``) +
     (guests ? ` для ${guests} ${window.utils.getWordForm(guests, GUEST_FORMS)}` : ``);
   card.querySelector(`.popup__text--time`).textContent = (checkin ?
@@ -93,6 +93,7 @@ const closeCard = () => {
   document.removeEventListener(`keydown`, onDocumentKeydown);
   isCardOpen = false;
   currentCard.remove();
+  document.querySelector(`.map__pin--active`).classList.remove(`map__pin--active`);
 };
 
 const onDocumentKeydown = (evt) => {
@@ -104,7 +105,7 @@ const onDocumentKeydown = (evt) => {
 
 const onCloseButtonClick = () => closeCard();
 
-const onMapClickOrKeydown = (evt) => {
+const openCard = (evt) => {
   const pin = evt.target.closest(`.map__pin:not(.map__pin--main)`);
   const activePin = document.querySelector(`.map__pin--active`);
 
@@ -115,14 +116,14 @@ const onMapClickOrKeydown = (evt) => {
   if (activePin) {
     activePin.classList.remove(`map__pin--active`);
   }
+
   pin.classList.add(`map__pin--active`);
 
   const notice = window.pins.noticesList.find((item) => item.id === +pin.dataset.id);
   showCard(notice);
-
 };
 
 window.card = {
-  onMapClickOrKeydown,
+  openCard,
   closeCard,
 };

@@ -39,11 +39,23 @@ const removePins = () => {
   mapPins.querySelectorAll(`.map__pin:not(.map__pin--main)`).forEach((node) => {
     mapPins.removeChild(node);
   });
+};
 
+const onMapClick = (evt) => window.card.openCard(evt);
+
+const onMapKeydown = (evt) => {
+  if (evt.key === `Enter`) {
+    window.card.openCard(evt);
+  }
+};
+
+const setPinsListener = () => {
+  addEventListener(`click`, onMapClick);
+  addEventListener(`keydown`, onMapKeydown);
 };
 
 window.pins = {
-  mapPins,
   showPins,
   removePins,
+  setPinsListener,
 };

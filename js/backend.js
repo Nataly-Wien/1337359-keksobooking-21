@@ -19,7 +19,7 @@ const createRequest = (makeLoad, showError) => {
     }
   });
 
-  xhr.addEventListener(`error`, () => showError(`Произошла ошибка ${xhr.status} - ${xhr.statusText}`));
+  xhr.addEventListener(`error`, () => showError(`Произошла ошибка ${xhr.status} ${xhr.statusText}`));
   xhr.addEventListener(`timeout`, () => showError(`Сервер не ответил в течение ${xhr.timeout} мс`));
 
   xhr.timeout = TIMEOUT;

@@ -33,18 +33,38 @@ const getWordForm = (number, forms) => {
 };
 
 const showError = (message) => {
+  const noticeForm = document.querySelector(`.ad-form`);
+  const resetButton = noticeForm.querySelector(`.ad-form__reset`);
+
+  const removeError = () => {
+    document.removeEventListener(`keydown`, onKeydown);
+    errorBlock.removeEventListener(`click`, onMessageClick);
+    noticeForm.removeEventListener(`input`, onFormInput);
+    noticeForm.removeEventListener(`submit`, onFormSubmit);
+    resetButton.removeEventListener(`click`, onResetClick);
+    mapPins.removeChild(errorBlock);
+  };
+
   const onKeydown = (evt) => {
     if (evt.key === `Escape`) {
-      document.removeEventListener(`keydown`, onKeydown);
-      mapPins.removeChild(errorBlock);
+      removeError();
     }
   };
+
+  const onMessageClick = () => removeError();
+  const onFormInput = () => removeError();
+  const onFormSubmit = () => removeError();
+  const onResetClick = () => removeError();
 
   const errorBlock = document.createElement(`div`);
   errorBlock.textContent = message;
   errorBlock.classList.add(`error-message`);
   mapPins.insertAdjacentElement(`afterbegin`, errorBlock);
   document.addEventListener(`keydown`, onKeydown);
+  errorBlock.addEventListener(`click`, onMessageClick);
+  noticeForm.addEventListener(`input`, onFormInput);
+  noticeForm.addEventListener(`submit`, onFormSubmit);
+  resetButton.addEventListener(`click`, onResetClick);
 };
 
 const addIdToData = (dataArray) => dataArray.map((item, index) => Object.assign({}, item, {

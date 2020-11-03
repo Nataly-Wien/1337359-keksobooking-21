@@ -23,8 +23,8 @@ const onSuccess = (dataList) => {
   window.forms.enableFilterForm();
 };
 
-const onMainPinClick = (evt) => {
-  if (window.utils.isPageActive || !(evt.button === 0 || evt.key === `Enter`)) {
+const activatePage = () => {
+  if (window.utils.isPageActive) {
     return;
   }
 
@@ -35,6 +35,17 @@ const onMainPinClick = (evt) => {
   window.backend.load(onSuccess, window.utils.showError);
 };
 
+const onMainPinMousedown = (evt) => {
+  if (evt.button === 0) {
+    activatePage();
+  }
+};
+const onMainPinKeydown = (evt) => {
+  if (evt.key === `Enter`) {
+    activatePage();
+  }
+};
+
 const deactivatePage = () => {
   window.utils.isPageActive = false;
   window.forms.disableForms();
@@ -42,8 +53,8 @@ const deactivatePage = () => {
 };
 
 const setActivationListener = () => {
-  mainPin.addEventListener(`mousedown`, onMainPinClick);
-  mainPin.addEventListener(`keydown`, onMainPinClick);
+  mainPin.addEventListener(`mousedown`, onMainPinMousedown);
+  mainPin.addEventListener(`keydown`, onMainPinKeydown);
 };
 
 window.activation = {
