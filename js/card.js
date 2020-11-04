@@ -118,7 +118,6 @@ const openCard = (evt) => {
   }
 
   pin.classList.add(`map__pin--active`);
-
   const notice = window.pins.noticesList.find((item) => item.id === +pin.dataset.id);
   showCard(notice);
 };

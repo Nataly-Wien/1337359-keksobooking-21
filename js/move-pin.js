@@ -1,6 +1,15 @@
 'use strict';
 
-const mainPin = document.querySelector(`.map__pin--main`);
+const LOCATION_Y_MIN = 130;
+const LOCATION_Y_MAX = 630;
+const LOCATION_X_MIN = 0;
+
+const MOUSE_PRECISION = 10;
+
+const mapPins = document.querySelector(`.map__pins`);
+const locationXMax = mapPins.clientWidth;
+
+const mainPin = mapPins.querySelector(`.map__pin--main`);
 const addressField = document.querySelector(`input[id="address"]`);
 
 const initialCoords = {
@@ -9,10 +18,6 @@ const initialCoords = {
 };
 
 const onPinDown = (downEvt) => {
-  if (!window.utils.isPageActive) {
-    return;
-  }
-
   downEvt.preventDefault();
 
   const startCoords = {
@@ -20,7 +25,15 @@ const onPinDown = (downEvt) => {
     y: downEvt.clientY
   };
 
+  const pinXMin = LOCATION_X_MIN - Math.round(window.activation.MAIN_PIN_WIDTH / 2);
+  const pinXMax = locationXMax - Math.round(window.activation.MAIN_PIN_WIDTH / 2);
+  const pinYMin = LOCATION_Y_MIN - window.activation.mainPinTotalHeight;
+  const pinYMax = LOCATION_Y_MAX - window.activation.mainPinTotalHeight;
+
   let isDragged = false;
+
+  let boundlessLeft = mainPin.offsetLeft;
+  let boundlessTop = mainPin.offsetTop;
 
   const onTargetMove = (moveEvt) => {
     moveEvt.preventDefault();
@@ -33,17 +46,13 @@ const onPinDown = (downEvt) => {
 
     const currentX = mainPin.offsetLeft + shift.x;
     const currentY = mainPin.offsetTop + shift.y;
+    boundlessLeft += shift.x;
+    boundlessTop += shift.y;
 
-    const pinXMin = window.utils.LOCATION_X_MIN - Math.round(window.activation.MAIN_PIN_WIDTH / 2);
-    const pinXMax = window.utils.locationXMax - Math.round(window.activation.MAIN_PIN_WIDTH / 2);
-    const pinYMin = window.utils.LOCATION_Y_MIN - window.activation.mainPinTotalHeight;
-    const pinYMax = window.utils.LOCATION_Y_MAX - window.activation.mainPinTotalHeight;
-
-    if (currentX >= pinXMin && currentX <= pinXMax) {
+    if (currentX >= pinXMin && currentX <= pinXMax && Math.abs(currentX - boundlessLeft) < MOUSE_PRECISION) {
       mainPin.style.left = `${currentX}px`;
     }
-
-    if (currentY >= pinYMin && currentY <= pinYMax) {
+    if (currentY >= pinYMin && currentY <= pinYMax && Math.abs(currentY - boundlessTop) < MOUSE_PRECISION) {
       mainPin.style.top = `${currentY}px`;
     }
 

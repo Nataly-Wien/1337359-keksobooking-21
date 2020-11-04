@@ -50,8 +50,8 @@ const onMapKeydown = (evt) => {
 };
 
 const setPinsListener = () => {
-  addEventListener(`click`, onMapClick);
-  addEventListener(`keydown`, onMapKeydown);
+  mapPins.addEventListener(`click`, onMapClick);
+  mapPins.addEventListener(`keydown`, onMapKeydown);
 };
 
 window.pins = {

@@ -8,8 +8,10 @@ const mainPinTotalHeight = MAIN_PIN_HEIGHT + MAIN_PIN_TALE;
 const mainPin = document.querySelector(`.map__pin--main`);
 const addressField = document.querySelector(`input[id="address"]`);
 
+let isPageActive = false;
+
 const getPinCoords = (element) => {
-  const currentY = window.utils.isPageActive ? mainPinTotalHeight : Math.round(MAIN_PIN_HEIGHT / 2);
+  const currentY = isPageActive ? mainPinTotalHeight : Math.round(MAIN_PIN_HEIGHT / 2);
   const x = parseInt(element.style.left, 10) + Math.round(MAIN_PIN_WIDTH / 2);
   const y = parseInt(element.style.top, 10) + currentY;
 
@@ -24,11 +26,11 @@ const onSuccess = (dataList) => {
 };
 
 const activatePage = () => {
-  if (window.utils.isPageActive) {
+  if (isPageActive) {
     return;
   }
 
-  window.utils.isPageActive = true;
+  isPageActive = true;
   window.forms.enableNoticeForm();
   addressField.value = getPinCoords(mainPin);
 
@@ -47,7 +49,7 @@ const onMainPinKeydown = (evt) => {
 };
 
 const deactivatePage = () => {
-  window.utils.isPageActive = false;
+  isPageActive = false;
   window.forms.disableForms();
   addressField.value = getPinCoords(mainPin);
 };

@@ -10,7 +10,7 @@ const VALIDATION_MESSAGES = [
   `100 комнат - не для гостей`,
   `Не для гостей подходит только 100 комнат`,
   `Заполните, пожалуйста, поле с заголовком Вашего объявления`,
-  `Минимальная длина заголовка - ${TITLE_MINLENGTH} символов. Остаалось ввести `,
+  `Минимальная длина заголовка - ${TITLE_MINLENGTH} символов. Осталось ввести `,
   `Максимальная длина заголовка - ${TITLE_MAXLENGTH} символов. Удалите лишние `,
   `Максимальная цена за ночь - `,
   `Заполните, пожалуйста, поле с ценой за ночь`,
@@ -19,6 +19,7 @@ const VALIDATION_MESSAGES = [
 ];
 
 const GUEST_MESSAGE_FORMS = [`гостя`, `гостей`, `гостей`];
+const TITLE_MESSAGE_FORMS = [`символ`, `символа`, `символов`];
 
 const priceMap = {
   bungalow: 0,
@@ -58,7 +59,7 @@ const onCapacityFieldCheck = (evt) => {
 };
 
 const onTitleFieldCheck = () => {
-  const TITLE_MESSAGE_FORMS = [`символ`, `символа`, `символов`];
+  titleField.value = titleField.value.trimRight();
   const fieldLength = titleField.value.length;
 
   titleField.setCustomValidity(``);

@@ -109,41 +109,52 @@ const onFormSubmit = (evt) => {
   }
 };
 
-const onFileInputChange = (imgContainer) => (evt) => {
-  const file = evt.target.files[0];
+const isImageFileValid = (file) => {
+  let isValid = true;
 
-  const isTypeMatch = () => IMAGE_TYPES.some((item) => file.type === item);
-  const isSizeMatch = () => file.size <= IMAGE_MAX_SIZE;
-
-  if (!isSizeMatch()) {
-    window.utils.showError(IMAGE_ERROR_MESSAGES[0]);
-  } else if (!isTypeMatch()) {
+  if (!IMAGE_TYPES.some((item) => file.type === item)) {
+    isValid = false;
     window.utils.showError(IMAGE_ERROR_MESSAGES[1]);
-  } else {
-    const reader = new FileReader();
-
-    reader.addEventListener(`load`, () => {
-      if (imgContainer.tagName === `IMG`) {
-        imgContainer.src = reader.result;
-      } else {
-        imgContainer.style.backgroundImage = `url(${reader.result})`;
-      }
-    });
-
-    reader.addEventListener(`error`, () => {
-      window.utils.showError(IMAGE_ERROR_MESSAGES[2]);
-    });
-
-    reader.readAsDataURL(file);
   }
+
+  if (file.size > IMAGE_MAX_SIZE) {
+    isValid = false;
+    window.utils.showError(IMAGE_ERROR_MESSAGES[0]);
+  }
+
+  return isValid;
 };
 
+const fileUpload = (evt, imgContainer) => {
+  const file = evt.target.files[0];
+
+  if (!isImageFileValid(file)) {
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.addEventListener(`load`, () => {
+    if (imgContainer.tagName === `IMG`) {
+      imgContainer.src = reader.result;
+    } else {
+      imgContainer.style.backgroundImage = `url(${reader.result})`;
+    }
+  });
+
+  reader.addEventListener(`error`, () => {
+    window.utils.showError(IMAGE_ERROR_MESSAGES[2]);
+  });
+
+  reader.readAsDataURL(file);
+
+};
 
 noticeForm.addEventListener(`submit`, onFormSubmit);
 resetButton.addEventListener(`click`, resetToInitial);
 
-avatarInput.addEventListener(`change`, onFileInputChange(avatarPreview));
-photoInput.addEventListener(`change`, onFileInputChange(photoPreview));
+avatarInput.addEventListener(`change`, (evt) => fileUpload(evt, avatarPreview));
+photoInput.addEventListener(`change`, (evt) => fileUpload(evt, photoPreview));
 
 window.forms = {
   enableNoticeForm,
