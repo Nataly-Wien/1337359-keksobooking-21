@@ -19,7 +19,7 @@ module.exports = {
     path: path.resolve(__dirname),
     iife: true
   },
-  devtool: `eval-source-map`,
+  devtool: false,
   devServer: {
     open: true,
     hot: true,
