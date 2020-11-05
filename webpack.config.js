@@ -3,6 +3,7 @@ const path = require("path");
 module.exports = {
   entry: [
     "./js/utils.js",
+    "./js/messages.js",
     "./js/forms.js",
     "./js/backend.js",
     "./js/pins.js",
@@ -18,7 +19,7 @@ module.exports = {
     path: path.resolve(__dirname),
     iife: true
   },
-  devtool: false,
+  devtool: `eval-source-map`,
   devServer: {
     open: true,
     hot: true,

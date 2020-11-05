@@ -1,18 +1,11 @@
 'use strict';
 
-const IMAGE_TYPES = [`image/gif`, `image/jpeg`, `image/png`];
 const DEFAULT_IMAGE = `img/muffin-grey.svg`;
-const IMAGE_MAX_SIZE = 512000;
-const IMAGE_ERROR_MESSAGES = [
-  `Максимальный размер файла - 500 Кб`,
-  `Неверный тип файла изображения`,
-  `Ошибка загрузки файла`,
-];
+const IMAGE_ERROR_MESSAGE = `Ошибка загрузки файла`;
 
 const map = document.querySelector(`.map`);
 const filterForm = map.querySelector(`.map__filters`);
 const noticeForm = document.querySelector(`.ad-form`);
-const main = document.querySelector(`main`);
 
 const noticeFormElements = noticeForm.querySelectorAll(`fieldset`);
 const filterFormElements = filterForm.querySelectorAll(`select, fieldset`);
@@ -59,6 +52,7 @@ const resetToInitial = (evt) => {
   window.card.closeCard();
   window.pins.removePins();
   noticeForm.reset();
+  window.validation.resetPlaceholder();
   filterForm.reset();
   avatarPreview.src = DEFAULT_IMAGE;
   photoPreview.style.backgroundImage = `none`;
@@ -66,38 +60,13 @@ const resetToInitial = (evt) => {
   window.activation.deactivatePage();
 };
 
-const showMessage = (message) => {
-  const closeMessage = () => {
-    document.removeEventListener(`click`, onDocumentClick);
-    document.removeEventListener(`keydown`, onDocumentKeydown);
-    main.removeChild(message);
-  };
-
-  const onDocumentClick = () => closeMessage();
-
-  const onDocumentKeydown = (evt) => {
-    if (evt.key === `Escape`) {
-      closeMessage();
-    }
-  };
-
-  main.insertAdjacentElement(`afterbegin`, message);
-  document.addEventListener(`click`, onDocumentClick);
-  document.addEventListener(`keydown`, onDocumentKeydown);
-
-  const errorButton = message.querySelector(`.error__button`);
-  if (errorButton) {
-    errorButton.addEventListener(`click`, closeMessage);
-  }
-};
-
 const onSuccess = () => {
   resetToInitial();
-  showMessage(successMessage);
+  window.messages.showMessage(successMessage);
 };
 
 const onError = () => {
-  showMessage(errorMessage);
+  window.messages.showMessage(errorMessage);
 };
 
 const onFormSubmit = (evt) => {
@@ -109,26 +78,10 @@ const onFormSubmit = (evt) => {
   }
 };
 
-const isImageFileValid = (file) => {
-  let isValid = true;
-
-  if (!IMAGE_TYPES.some((item) => file.type === item)) {
-    isValid = false;
-    window.utils.showError(IMAGE_ERROR_MESSAGES[1]);
-  }
-
-  if (file.size > IMAGE_MAX_SIZE) {
-    isValid = false;
-    window.utils.showError(IMAGE_ERROR_MESSAGES[0]);
-  }
-
-  return isValid;
-};
-
 const fileUpload = (evt, imgContainer) => {
   const file = evt.target.files[0];
 
-  if (!isImageFileValid(file)) {
+  if (!window.validation.isImageFileValid(file)) {
     return;
   }
 
@@ -143,7 +96,7 @@ const fileUpload = (evt, imgContainer) => {
   });
 
   reader.addEventListener(`error`, () => {
-    window.utils.showError(IMAGE_ERROR_MESSAGES[2]);
+    window.messages.showError(IMAGE_ERROR_MESSAGE);
   });
 
   reader.readAsDataURL(file);

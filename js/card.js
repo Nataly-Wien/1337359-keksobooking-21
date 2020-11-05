@@ -90,10 +90,16 @@ const closeCard = () => {
   if (!isCardOpen) {
     return;
   }
+
+  const activePin = document.querySelector(`.map__pin--active`);
+
   document.removeEventListener(`keydown`, onDocumentKeydown);
   isCardOpen = false;
   currentCard.remove();
-  document.querySelector(`.map__pin--active`).classList.remove(`map__pin--active`);
+
+  if (activePin) {
+    activePin.classList.remove(`map__pin--active`);
+  }
 };
 
 const onDocumentKeydown = (evt) => {

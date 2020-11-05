@@ -5,6 +5,14 @@ const TITLE_MINLENGTH = 30;
 const TITLE_MAXLENGTH = 100;
 const PRICE_MAX = 1000000;
 
+const IMAGE_MAX_SIZE = 512000;
+const IMAGE_TYPES = [`image/gif`, `image/jpeg`, `image/png`];
+
+const IMAGE_ERROR_MESSAGES = [
+  `Максимальный размер файла - 500 Кб`,
+  `Неверный тип файла. Допустимые типы файла изображения - `,
+];
+
 const VALIDATION_MESSAGES = [
   `Выбранное Вами количество комнат подходит не более чем для`,
   `100 комнат - не для гостей`,
@@ -113,6 +121,10 @@ const onPriceFieldCheck = (evt) => {
   }
 };
 
+const resetPlaceholder = () => {
+  priceField.placeholder = priceMap[typeField.value];
+};
+
 const onTimeFieldsCheck = (evt) => {
   checkinField.value = evt.target.value;
   checkoutField.value = evt.target.value;
@@ -120,6 +132,22 @@ const onTimeFieldsCheck = (evt) => {
 
 const resetCustomValidity = (evt) => {
   evt.target.setCustomValidity(``);
+};
+
+const isImageFileValid = (file) => {
+  let isValid = true;
+
+  if (!IMAGE_TYPES.some((item) => file.type === item)) {
+    isValid = false;
+    window.messages.showError(IMAGE_ERROR_MESSAGES[1] + IMAGE_TYPES.map((item) => item.slice(6)).join(`, `));
+  }
+
+  if (file.size > IMAGE_MAX_SIZE) {
+    isValid = false;
+    window.messages.showError(IMAGE_ERROR_MESSAGES[0]);
+  }
+
+  return isValid;
 };
 
 const setValidation = () => {
@@ -139,4 +167,6 @@ const setValidation = () => {
 window.validation = {
   onCapacityFieldCheck,
   setValidation,
+  isImageFileValid,
+  resetPlaceholder,
 };

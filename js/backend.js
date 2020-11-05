@@ -2,6 +2,11 @@
 
 const API_URL = `https://21.javascript.pages.academy/keksobooking`;
 const TIMEOUT = 10000;
+const ERROR_MESSAGES = [
+  `Запрос к серверу завершен со статусом`,
+  `Произошла ошибка`,
+  `Сервер не ответил в течение`,
+];
 
 const StatusCode = {
   OK: 200,
@@ -15,12 +20,12 @@ const createRequest = (makeLoad, showError) => {
     if (xhr.status === StatusCode.OK) {
       makeLoad(xhr.response);
     } else {
-      showError(`Запрос к серверу завершен со статусом ${xhr.status} - ${xhr.statusText}`);
+      showError(`${ERROR_MESSAGES[0]} ${xhr.status} - ${xhr.statusText}`);
     }
   });
 
-  xhr.addEventListener(`error`, () => showError(`Произошла ошибка ${xhr.status} ${xhr.statusText}`));
-  xhr.addEventListener(`timeout`, () => showError(`Сервер не ответил в течение ${xhr.timeout} мс`));
+  xhr.addEventListener(`error`, () => showError(`${ERROR_MESSAGES[1]} ${xhr.status} ${xhr.statusText}`));
+  xhr.addEventListener(`timeout`, () => showError(`${ERROR_MESSAGES[2]} ${xhr.timeout} мс`));
 
   xhr.timeout = TIMEOUT;
   return xhr;

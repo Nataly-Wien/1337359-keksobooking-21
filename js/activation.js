@@ -34,7 +34,7 @@ const activatePage = () => {
   window.forms.enableNoticeForm();
   addressField.value = getPinCoords(mainPin);
 
-  window.backend.load(onSuccess, window.utils.showError);
+  window.backend.load(onSuccess, window.messages.showError);
 };
 
 const onMainPinMousedown = (evt) => {
