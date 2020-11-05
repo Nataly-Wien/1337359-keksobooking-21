@@ -2,7 +2,7 @@
 
 const MAIN_PIN_WIDTH = 65;
 const MAIN_PIN_HEIGHT = 65;
-const MAIN_PIN_TALE = 22;
+const MAIN_PIN_TALE = 16;
 const mainPinTotalHeight = MAIN_PIN_HEIGHT + MAIN_PIN_TALE;
 
 const mainPin = document.querySelector(`.map__pin--main`);
