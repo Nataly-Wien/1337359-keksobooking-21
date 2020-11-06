@@ -1,5 +1,10 @@
 'use strict';
 
+const Key = {
+  ENTER: `Enter`,
+  ESCAPE: `Escape`,
+};
+
 const getWordForm = (number, forms) => {
   const cases = [2, 0, 1, 1, 1, 2];
   number = Math.floor(Math.abs(number)) % 100;
@@ -28,6 +33,7 @@ const debounce = (fn, timeout = 500) => {
 };
 
 window.utils = {
+  Key,
   getWordForm,
   addIdToData,
   debounce,

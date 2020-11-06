@@ -14,7 +14,7 @@ const showMessage = (messageBlock) => {
 
   const onDocumentClick = () => closeMessage();
   const onDocumentKeydown = (evt) => {
-    if (evt.key === `Escape`) {
+    if (evt.key === window.utils.Key.ESCAPE) {
       closeMessage();
     }
   };
@@ -44,7 +44,7 @@ const showError = (message) => {
   const onFormSubmit = () => removeError();
   const onResetClick = () => removeError();
   const onKeydown = (evt) => {
-    if (evt.key === `Escape`) {
+    if (evt.key === window.utils.Key.ESCAPE) {
       removeError();
     }
   };

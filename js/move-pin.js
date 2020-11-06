@@ -63,7 +63,7 @@ const onPinDown = (downEvt) => {
   };
 
   const onTargetUp = (upEvt) => {
-    upEvt.preventDefault(upEvt);
+    upEvt.preventDefault();
     addressField.value = window.activation.getPinCoords(mainPin);
 
     if (isDragged) {

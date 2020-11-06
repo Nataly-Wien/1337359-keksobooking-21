@@ -8,6 +8,11 @@ const ERROR_MESSAGES = [
   `Сервер не ответил в течение`,
 ];
 
+const RequestMethod = {
+  GET: `GET`,
+  POST: `POST`,
+};
+
 const StatusCode = {
   OK: 200,
 };
@@ -33,13 +38,13 @@ const createRequest = (makeLoad, showError) => {
 
 const load = (onLoad, onError) => {
   const xhr = createRequest(onLoad, onError);
-  xhr.open(`GET`, `${API_URL}/data`);
+  xhr.open(RequestMethod.GET, `${API_URL}/data`);
   xhr.send();
 };
 
 const save = (data, onLoad, onError) => {
   const xhr = createRequest(onLoad, onError);
-  xhr.open(`POST`, API_URL);
+  xhr.open(RequestMethod.POST, API_URL);
   xhr.send(data);
 };
 

@@ -44,7 +44,7 @@ const removePins = () => {
 const onMapClick = (evt) => window.card.openCard(evt);
 
 const onMapKeydown = (evt) => {
-  if (evt.key === `Enter`) {
+  if (evt.key === window.utils.Key.ENTER) {
     window.card.openCard(evt);
   }
 };

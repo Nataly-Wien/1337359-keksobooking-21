@@ -43,7 +43,7 @@ const onMainPinMousedown = (evt) => {
   }
 };
 const onMainPinKeydown = (evt) => {
-  if (evt.key === `Enter`) {
+  if (evt.key === window.utils.Key.ENTER) {
     activatePage();
   }
 };
