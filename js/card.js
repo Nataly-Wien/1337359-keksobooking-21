@@ -73,9 +73,9 @@ const getNoticeCard = (notice) => {
 
   if (photos) {
     photos.forEach((photo) => {
-      const photoNode = photoTemplate.cloneNode();
-      photoNode.src = photo;
-      photosBlock.appendChild(photoNode);
+      const node = photoTemplate.cloneNode();
+      node.src = photo;
+      photosBlock.appendChild(node);
     });
   }
 
