@@ -38,6 +38,10 @@ const getNoticeCard = (notice) => {
 
   const cardTemplate = document.querySelector(`#card`).content;
   const card = cardTemplate.querySelector(`.map__card`).cloneNode(true);
+  const featuresBlock = card.querySelector(`.popup__features`);
+  const photosBlock = card.querySelector(`.popup__photos`);
+  const photoTemplate = photosBlock.querySelector(`.popup__photo`);
+  const avatarBlock = card.querySelector(`.popup__avatar`);
 
   if (Object.keys(notice.offer).length === 0) {
     card.hidden = true;
@@ -57,21 +61,15 @@ const getNoticeCard = (notice) => {
   card.querySelector(`.popup__text--capacity`).textContent = roomsText + guestsText;
   card.querySelector(`.popup__text--time`).textContent = checkinText + checkoutText;
 
-  const featuresBlock = card.querySelector(`.popup__features`);
-  const featuresList = featuresBlock.querySelectorAll(`.popup__feature`);
+  featuresBlock.innerHTML = ``;
 
   if (features) {
-    featuresList.forEach((node) => {
-      if (!features.some((feature) => feature === node.classList.item(1).replace(`popup__feature--`, ``))) {
-        featuresBlock.removeChild(node);
-      }
+    features.forEach((item) => {
+      const node = document.createElement(`li`);
+      node.classList.add(`popup__feature`, `popup__feature--${item}`);
+      featuresBlock.appendChild(node);
     });
-  } else {
-    featuresBlock.innerHTML = ``;
   }
-
-  const photosBlock = card.querySelector(`.popup__photos`);
-  const photoTemplate = photosBlock.querySelector(`.popup__photo`);
 
   if (photos) {
     photos.forEach((photo) => {
@@ -83,7 +81,6 @@ const getNoticeCard = (notice) => {
 
   photoTemplate.remove();
 
-  const avatarBlock = card.querySelector(`.popup__avatar`);
   avatarBlock.src = avatar;
   avatarBlock.alt = title;
 
